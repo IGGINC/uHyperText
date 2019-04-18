@@ -32,6 +32,8 @@ namespace WXB
                 OnFunHys['K'] = ParserSureColor;
                 OnFunHys['Y'] = ParserSureColor;
                 OnFunHys['W'] = ParserSureColor;
+                OnFunHys['U'] = ParserSureColor;
+                OnFunHys['H'] = ParserSureColor;
                 OnFunHys['P'] = ParserSureColor;
 
                 OnFunHys['c'] = ParserFontColor;

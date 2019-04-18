@@ -464,6 +464,8 @@ namespace WXB
             case 'K': return Color.black;
             case 'Y': return Color.yellow;
             case 'W': return Color.white;
+            case 'U': return new Color(214 / 255f, 226 / 255f, 229 / 255f, 1f);
+            case 'H': return new Color(194 / 255f, 194 / 255f, 194 / 255f, 1f);
             }
 
             return Color.white;
