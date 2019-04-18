@@ -34,44 +34,90 @@ namespace WXB
 			float width  = getWidth();
 			float height = getHeight();
 
-            if (x + width > maxWidth)
+            if (owner.isArabic)
             {
-				x = 0;
-				yline++;
-			}
+                if (x - width < 0)
+                {
+                    x = maxWidth;
+                    yline++;
+                }
 
-			float alignedX = AlignedFormatting(owner, formatting, maxWidth, lines[(int)(yline)].x);
+                float curentWidth = lines[(int)(yline)].x;
+                float alignedX = AlignedFormatting(owner, formatting, maxWidth, curentWidth);
+                alignedX = maxWidth - (alignedX + curentWidth);
 
-			float y_offset = offsetY;
-			for (int i = 0; i < yline; ++i)
-				y_offset += lines[i].y;
+                float y_offset = offsetY;
+                for (int i = 0; i < yline; ++i)
+                    y_offset += lines[i].y;
 
-			//y_offset += lines[(int)(yline)].y;
-            Rect areaRect = new Rect(x + offsetX + alignedX, y_offset, width, height);
+                Rect areaRect = new Rect(x + offsetX - alignedX - width, y_offset, width, height);
 
-            float newfx = 0f;
-            while (!owner.around.isContain(areaRect, out newfx))
+                float newfx = 0;
+                while (!owner.around.isContain(areaRect, out newfx, true))
+                {
+                    areaRect.x = newfx;
+                    x = newfx - alignedX - offsetX;
+                    if (x - width < 0)
+                    {
+                        x = maxWidth;
+                        yline++;
+                        y_offset += lines[(int)yline].y;
+                        areaRect = new Rect(x + offsetX - alignedX - width, y_offset, width, height);
+                    }
+                }
+
+                OnRectRender(cache, lines[(int)yline], areaRect);
+
+                x -= width;
+
+                if (d_bNewLine)
+                {
+                    x = maxWidth;
+                    yline++;
+                }
+                return;
+            }
+            else
             {
-                areaRect.x = newfx;
-                x = newfx - alignedX - offsetX;
                 if (x + width > maxWidth)
                 {
                     x = 0;
                     yline++;
-                    y_offset += lines[(int)yline].y;
-                    areaRect = new Rect(x + offsetX + alignedX, y_offset, width, height);
+                }
+
+                float alignedX = AlignedFormatting(owner, formatting, maxWidth, lines[(int)(yline)].x);
+
+                float y_offset = offsetY;
+                for (int i = 0; i < yline; ++i)
+                    y_offset += lines[i].y;
+
+                //y_offset += lines[(int)(yline)].y;
+                Rect areaRect = new Rect(x + offsetX + alignedX, y_offset, width, height);
+
+                float newfx = 0f;
+                while (!owner.around.isContain(areaRect, out newfx))
+                {
+                    areaRect.x = newfx;
+                    x = newfx - alignedX - offsetX;
+                    if (x + width > maxWidth)
+                    {
+                        x = 0;
+                        yline++;
+                        y_offset += lines[(int)yline].y;
+                        areaRect = new Rect(x + offsetX + alignedX, y_offset, width, height);
+                    }
+                }
+
+                OnRectRender(cache, lines[(int)yline], areaRect);
+
+                x += width;
+
+                if (d_bNewLine)
+                {
+                    x = 0;
+                    yline++;
                 }
             }
-
-            OnRectRender(cache, lines[(int)yline], areaRect);
-
-            x += width;
-
-			if (d_bNewLine)
-			{
-				x = 0;
-				yline++;
-			}
-		}
+        }
 	};
 }

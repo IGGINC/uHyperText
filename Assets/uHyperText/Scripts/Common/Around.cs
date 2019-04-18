@@ -45,7 +45,14 @@ namespace WXB
             {
                 if (m_Rects[i].Overlaps(r))
                 {
-                    ox = (m_Rects[i].xMin - 5f);
+                    if (bRtl)
+                    {
+                        ox = (m_Rects[i].xMin - 5f);
+                    }
+                    else
+                    {
+                        ox = (m_Rects[i].xMax + 5f);
+                    }
                     return false;
                 }
             }
