@@ -17,7 +17,7 @@ namespace WXB
             get { return s_VertexHelper; }
         }
 
-        // ×óÏÂ½Ç(YÖá³¯ÏÂ)×ø±êÏµ×ª»»Îª×óÉÏ½Ç(YÖá³¯ÉÏ)×ø±êÏµ
+        // å·¦ä¸‹è§’(Yè½´æœä¸‹)åæ ‡ç³»è½¬æ¢ä¸ºå·¦ä¸Šè§’(Yè½´æœä¸Š)åæ ‡ç³»
         public static void LB2LT(ref Vector2 pos, float height)
         {
             pos.y = height - pos.y;
@@ -49,10 +49,10 @@ namespace WXB
             return DefaultFont;
         }
 
-        // µÃµ½¾«ÁéµÄ½Ó¿Ú
+        // å¾—åˆ°ç²¾çµçš„æ¥å£
         public static System.Func<string, Sprite> s_get_sprite = null;
 
-        // µÃµ½×ÖÌåµÄ½Ó¿Ú
+        // å¾—åˆ°å­—ä½“çš„æ¥å£
         public static System.Func<string, Font> s_get_font = null;
 
         static public Sprite GetSprite(string name)
@@ -88,7 +88,7 @@ namespace WXB
 
         public static void AddLine(VertexHelper vh, Vector2 leftPos, Vector2 uv, float width, float height, Color color)
         {
-            // ÓĞÏÂ»®Ïß
+            // æœ‰ä¸‹åˆ’çº¿
             Vector2 leftTop = new Vector2(leftPos.x, leftPos.y);
 
             int count = vh.currentVertCount;
@@ -269,7 +269,7 @@ namespace WXB
             }
             else
             {
-                // c,ºóÃæ½ÓµÄ×Ö·û¶¨ÒåÎª×ÖÌåµÄÑÕÉ«£¬Èç¹ûºóÃæ×Ö·û²»ÊÇÊı×Ö£¬ÔòÑÕÉ«»Ö¸´ÎªÄ¬ÈÏµÄÑÕÉ«,×î¶àÁù¸öÊı×Ö
+                // c,åé¢æ¥çš„å­—ç¬¦å®šä¹‰ä¸ºå­—ä½“çš„é¢œè‰²ï¼Œå¦‚æœåé¢å­—ç¬¦ä¸æ˜¯æ•°å­—ï¼Œåˆ™é¢œè‰²æ¢å¤ä¸ºé»˜è®¤çš„é¢œè‰²,æœ€å¤šå…­ä¸ªæ•°å­—
                 int start_color = ++startpos;
                 int color_lenght = 0;
                 int lenght = text.Length;

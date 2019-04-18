@@ -96,75 +96,75 @@ namespace WXB
 
             Around around = owner.around;
             bool isContain = false; // 当前行是否包含此元素
-            if(owner.isArabic)
-            {
-                for (int i = TempList.Count-1; i >=0;)
-                {
-                    float totalwidth = TempList[i].totalwidth;
-                    float newx = maxWidth;
-                    if (((currentpos.x - totalwidth) < 0))
-                    {
-                        currentpos = TempList[i].Next(this, currentpos, lines, maxWidth, height, around, totalwidth, ref isContain);
-                        --i;
-                    }
-                    else if (around != null && !around.isContain(currentpos.x-totalwidth, currentpos.y, totalwidth, height, out newx, true))
-                    {
-                        // 放置不下了
-                        currentpos.x = newx;
-                    }
-                    else
-                    {
-                        currentpos.x -= totalwidth;
-                        isContain = true;
-                        --i;
-                    }
-                }
-
-                Line bl = lines.back();
-                bl.x = maxWidth-currentpos.x;
-                bl.y = Mathf.Max(height, bl.y);
-
-                if (d_bNewLine)
-                {
-                    lines.Add(new Line(Vector2.zero));
-                    currentpos.y += height;
-                    currentpos.x = maxWidth;
-                }
+            if(owner.isArabic)
+            {
+                for (int i = TempList.Count-1; i >=0;)
+                {
+                    float totalwidth = TempList[i].totalwidth;
+                    float newx = maxWidth;
+                    if (((currentpos.x - totalwidth) < 0))
+                    {
+                        currentpos = TempList[i].Next(this, currentpos, lines, maxWidth, height, around, totalwidth, ref isContain);
+                        --i;
+                    }
+                    else if (around != null && !around.isContain(currentpos.x-totalwidth, currentpos.y, totalwidth, height, out newx, true))
+                    {
+                        // 放置不下了
+                        currentpos.x = newx;
+                    }
+                    else
+                    {
+                        currentpos.x -= totalwidth;
+                        isContain = true;
+                        --i;
+                    }
+                }
+
+                Line bl = lines.back();
+                bl.x = maxWidth-currentpos.x;
+                bl.y = Mathf.Max(height, bl.y);
+
+                if (d_bNewLine)
+                {
+                    lines.Add(new Line(Vector2.zero));
+                    currentpos.y += height;
+                    currentpos.x = maxWidth;
+                }
             }
-            else
-            {
-                for (int i = 0; i < TempList.Count;)
-                {
-                    float totalwidth = TempList[i].totalwidth;
-                    float newx = 0f;
-                    if (((currentpos.x + totalwidth) > maxWidth))
-                    {
-                        currentpos = TempList[i].Next(this, currentpos, lines, maxWidth, height, around, totalwidth, ref isContain);
-                        ++i;
-                    }
-                    else if (around != null && !around.isContain(currentpos.x, currentpos.y, totalwidth, height, out newx))
-                    {
-                        // 放置不下了
-                        currentpos.x = newx;
-                    }
-                    else
-                    {
-                        currentpos.x += totalwidth;
-                        isContain = true;
-                        ++i;
-                    }
-                }
-
-                Line bl = lines.back();
-                bl.x = currentpos.x;
-                bl.y = Mathf.Max(height, bl.y);
-
-                if (d_bNewLine)
-                {
-                    lines.Add(new Line(Vector2.zero));
-                    currentpos.y += height;
-                    currentpos.x = 0;
-                }
+            else
+            {
+                for (int i = 0; i < TempList.Count;)
+                {
+                    float totalwidth = TempList[i].totalwidth;
+                    float newx = 0f;
+                    if (((currentpos.x + totalwidth) > maxWidth))
+                    {
+                        currentpos = TempList[i].Next(this, currentpos, lines, maxWidth, height, around, totalwidth, ref isContain);
+                        ++i;
+                    }
+                    else if (around != null && !around.isContain(currentpos.x, currentpos.y, totalwidth, height, out newx))
+                    {
+                        // 放置不下了
+                        currentpos.x = newx;
+                    }
+                    else
+                    {
+                        currentpos.x += totalwidth;
+                        isContain = true;
+                        ++i;
+                    }
+                }
+
+                Line bl = lines.back();
+                bl.x = currentpos.x;
+                bl.y = Mathf.Max(height, bl.y);
+
+                if (d_bNewLine)
+                {
+                    lines.Add(new Line(Vector2.zero));
+                    currentpos.y += height;
+                    currentpos.x = 0;
+                }
             }
         }
 
@@ -226,106 +226,106 @@ namespace WXB
 #endif
             public Vector2 Next(NodeBase n, Vector2 currentPos, List<Line> lines, float maxWidth, float height, Around round, float tw, ref bool currentLineContain)
             {
-                if (n.owner.isArabic)
-                {
-                    if (currentPos.x != maxWidth)
-                    {
-                        Line bl = lines.back();
-                        bl.x = maxWidth-currentPos.x;
-                        if (currentLineContain)
-                        {
-                            bl.y = Mathf.Max(bl.y, height);
-                        }
-
-                        // 当前行有数据，在新行里处理
-                        currentPos.x = maxWidth;
-                        currentPos.y += bl.y;
-                        currentLineContain = false;
-                        lines.Add(new Line(Vector2.zero));
-                    }
-                    else
-                    {
-                        // 当前行没有数据，直接在此行处理
-                    }
-
-                    if (round != null)
-                    {
-                        float newx = 0f;
-                        while (!round.isContain(currentPos.x, currentPos.y, tw, height, out newx, n.owner.isArabic))
-                        {
-                            currentPos.x = newx;
-                            if (currentPos.x - tw < 0)
-                            {
-                                currentPos.x = maxWidth;
-                                lines.Add(new Line(new Vector2(0, height)));
-                                currentPos.y += height;
-                            }
-                        }
-                    }
-
-                    if (widthList != null)
-                    {
-                        for (int i = 0; i < widthList.Count; ++i)
-                        {
-                            currentPos = Add(n, currentPos, widthList[i], maxWidth, lines, height, ref currentLineContain);
-                        }
-                    }
-                    else
-                    {
-                        currentPos = Add(n, currentPos, totalWidth, maxWidth, lines, height, ref currentLineContain);
-                    }
-
-                    lines.back().x = maxWidth-currentPos.x;
+                if (n.owner.isArabic)
+                {
+                    if (currentPos.x != maxWidth)
+                    {
+                        Line bl = lines.back();
+                        bl.x = maxWidth-currentPos.x;
+                        if (currentLineContain)
+                        {
+                            bl.y = Mathf.Max(bl.y, height);
+                        }
+
+                        // 当前行有数据，在新行里处理
+                        currentPos.x = maxWidth;
+                        currentPos.y += bl.y;
+                        currentLineContain = false;
+                        lines.Add(new Line(Vector2.zero));
+                    }
+                    else
+                    {
+                        // 当前行没有数据，直接在此行处理
+                    }
+
+                    if (round != null)
+                    {
+                        float newx = 0f;
+                        while (!round.isContain(currentPos.x, currentPos.y, tw, height, out newx, n.owner.isArabic))
+                        {
+                            currentPos.x = newx;
+                            if (currentPos.x - tw < 0)
+                            {
+                                currentPos.x = maxWidth;
+                                lines.Add(new Line(new Vector2(0, height)));
+                                currentPos.y += height;
+                            }
+                        }
+                    }
+
+                    if (widthList != null)
+                    {
+                        for (int i = 0; i < widthList.Count; ++i)
+                        {
+                            currentPos = Add(n, currentPos, widthList[i], maxWidth, lines, height, ref currentLineContain);
+                        }
+                    }
+                    else
+                    {
+                        currentPos = Add(n, currentPos, totalWidth, maxWidth, lines, height, ref currentLineContain);
+                    }
+
+                    lines.back().x = maxWidth-currentPos.x;
                 }
                 else
-                {
-                    if (currentPos.x != 0f)
-                    {
-                        Line bl = lines.back();
-                        bl.x = currentPos.x;
-                        if (currentLineContain)
-                        {
-                            bl.y = Mathf.Max(bl.y, height);
-                        }
-
-                        // 当前行有数据，在新行里处理
-                        currentPos.x = 0f;
-                        currentPos.y += bl.y;
-                        currentLineContain = false;
-                        lines.Add(new Line(new Vector2(0, 0)));
-                    }
-                    else
-                    {
-                        // 当前行没有数据，直接在此行处理
-                    }
-
-                    if (round != null)
-                    {
-                        float newx = 0f;
-                        while (!round.isContain(currentPos.x, currentPos.y, tw, height, out newx))
-                        {
-                            currentPos.x = newx;
-                            if (currentPos.x + tw > maxWidth)
-                            {
-                                currentPos.x = 0f;
-                                lines.Add(new Line(new Vector2(0, height)));
-                                currentPos.y += height;
-                            }
-                        }
-                    }
-
-                    if (widthList != null)
-                    {
-                        for (int i = 0; i < widthList.Count; ++i)
-                        {
-                            currentPos = Add(n, currentPos, widthList[i], maxWidth, lines, height, ref currentLineContain);
-                        }
-                    }
-                    else
-                    {
-                        currentPos = Add(n, currentPos, totalWidth, maxWidth, lines, height, ref currentLineContain);
-                    }
-                }
+                {
+                    if (currentPos.x != 0f)
+                    {
+                        Line bl = lines.back();
+                        bl.x = currentPos.x;
+                        if (currentLineContain)
+                        {
+                            bl.y = Mathf.Max(bl.y, height);
+                        }
+
+                        // 当前行有数据，在新行里处理
+                        currentPos.x = 0f;
+                        currentPos.y += bl.y;
+                        currentLineContain = false;
+                        lines.Add(new Line(new Vector2(0, 0)));
+                    }
+                    else
+                    {
+                        // 当前行没有数据，直接在此行处理
+                    }
+
+                    if (round != null)
+                    {
+                        float newx = 0f;
+                        while (!round.isContain(currentPos.x, currentPos.y, tw, height, out newx))
+                        {
+                            currentPos.x = newx;
+                            if (currentPos.x + tw > maxWidth)
+                            {
+                                currentPos.x = 0f;
+                                lines.Add(new Line(new Vector2(0, height)));
+                                currentPos.y += height;
+                            }
+                        }
+                    }
+
+                    if (widthList != null)
+                    {
+                        for (int i = 0; i < widthList.Count; ++i)
+                        {
+                            currentPos = Add(n, currentPos, widthList[i], maxWidth, lines, height, ref currentLineContain);
+                        }
+                    }
+                    else
+                    {
+                        currentPos = Add(n, currentPos, totalWidth, maxWidth, lines, height, ref currentLineContain);
+                    }
+                }
                 lines.back().x = currentPos.x;
 
                 return currentPos;
@@ -333,45 +333,45 @@ namespace WXB
 
             Vector2 Add(NodeBase n, Vector2 currentPos, float width, float maxWidth, List<Line> lines, float height, ref bool currentLineContain)
             {
-                if (n.owner.isArabic)
-                {
-                    if (currentPos.x - width < 0)
-                    {
-                        // 需要换新行了
-                        Line bl = lines.back();
-                        bl.x = maxWidth-currentPos.x;
-                        if (currentLineContain)
-                            bl.y = Mathf.Max(bl.y, height);
-
-                        currentPos.x = maxWidth-width;
-                        lines.Add(new Line(new Vector2(currentPos.x, height)));
-                        currentPos.y += height;
-                    }
-                    else
-                    {
-                        currentPos.x -= width;
-                    }
+                if (n.owner.isArabic)
+                {
+                    if (currentPos.x - width < 0)
+                    {
+                        // 需要换新行了
+                        Line bl = lines.back();
+                        bl.x = maxWidth-currentPos.x;
+                        if (currentLineContain)
+                            bl.y = Mathf.Max(bl.y, height);
+
+                        currentPos.x = maxWidth-width;
+                        lines.Add(new Line(new Vector2(currentPos.x, height)));
+                        currentPos.y += height;
+                    }
+                    else
+                    {
+                        currentPos.x -= width;
+                    }
                 }
                 else
-                {
-                    if (currentPos.x + width > maxWidth)
-                    {
-                        // 需要换新行了
-                        Line bl = lines.back();
-                        bl.x = currentPos.x;
-                        if (currentLineContain)
-                            bl.y = Mathf.Max(bl.y, height);
-
-                        currentPos.x = width;
-                        lines.Add(new Line(new Vector2(currentPos.x, height)));
-                        currentPos.y += height;
-                    }
-                    else
-                    {
-                        currentPos.x += width;
-                    }
-                }
-
+                {
+                    if (currentPos.x + width > maxWidth)
+                    {
+                        // 需要换新行了
+                        Line bl = lines.back();
+                        bl.x = currentPos.x;
+                        if (currentLineContain)
+                            bl.y = Mathf.Max(bl.y, height);
+
+                        currentPos.x = width;
+                        lines.Add(new Line(new Vector2(currentPos.x, height)));
+                        currentPos.y += height;
+                    }
+                    else
+                    {
+                        currentPos.x += width;
+                    }
+                }
+
                 currentLineContain = true;
                 return currentPos;
             }
