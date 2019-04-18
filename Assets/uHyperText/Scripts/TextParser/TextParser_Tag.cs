@@ -278,16 +278,18 @@ namespace WXB
             config.effectDistance.y = att.getValueAsFloat("y", 1f);
         }
 
-        void TagParam(string tag, string param)
+        bool TagParam(string tag, string param)
         {
             System.Action<string, string>  fun;
             if (TagFuns.TryGetValue(tag, out fun))
             {
                 fun(tag, param);
+                return true;
             }
             else
             {
-                Debug.LogErrorFormat("tag:{0} param:{1} not find!", tag, param);
+                //Debug.LogErrorFormat("tag:{0} param:{1} not find!", tag, param);
+                return false;
             }
         }
     }

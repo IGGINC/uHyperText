@@ -64,6 +64,21 @@ namespace WXB
             SetMaterialDirty();
         }
 
+        private bool m_isArabic = false;
+        public bool isArabic
+        {
+            get
+            {
+                return m_isArabic;
+            }
+            set
+            {
+                m_isArabic = value;
+                SetAllDirty();
+                UpdateByDirty();
+            }
+        }
+
         public override string text
         {
             set

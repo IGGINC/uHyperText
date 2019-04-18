@@ -270,10 +270,15 @@ namespace WXB
                                 if (d_text.Length != 0)
                                     save(false);
 
-                                TagParam(tag, param);
-
-                                d_curPos = endpos + 1;
-                                break;
+                                if (TagParam(tag, param))
+                                {
+                                    d_curPos = endpos + 1;
+                                    break;
+                                }
+                                else
+                                {
+                                    d_text.Append(text[d_curPos]);
+                                }
                             }
                             else
                             {
@@ -357,7 +362,14 @@ namespace WXB
             // 为文本 
             TextNode textNode = CreateNode<TextNode>();
             {
-                textNode.d_text = d_text.ToString();
+                if (mOwner.isArabic)
+                {
+                    textNode.d_text = ArabicSupport.ArabicFixer.Fix(d_text.ToString(), false, false);
+                }
+                else
+                {
+                    textNode.d_text = d_text.ToString();
+                }
                 textNode.SetConfig(currentConfig);
             }
             textNode.setNewLine(isNewLine);

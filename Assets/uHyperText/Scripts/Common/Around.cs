@@ -18,7 +18,7 @@ namespace WXB
             m_Rects.Clear();
         }
 
-        public bool isContain(Rect rect, out float ox)
+        public bool isContain(Rect rect, out float ox, bool bRtl = false)
         {
             if (m_Rects.Count == 0)
             {
@@ -26,23 +26,26 @@ namespace WXB
                 return true;
             }
 
-            return isContain(rect.x, rect.y, rect.width, rect.height, out ox);
+            return isContain(rect.x, rect.y, rect.width, rect.height, out ox, bRtl);
         }
 
-        public bool isContain(float x, float y, float w, float h, out float ox)
+        public bool isContain(float x, float y, float w, float h, out float ox, bool bRtl = false)
         {
             if (m_Rects.Count == 0)
             {
                 ox = 0f;
                 return true;
             }
-
+            if (bRtl)
+            {
+                x = x - w;
+            }
             Rect r = new Rect(x, y, w, h);
             for (int i = 0; i < m_Rects.Count; ++i)
             {
                 if (m_Rects[i].Overlaps(r))
                 {
-                    ox = (m_Rects[i].xMax + 5f);
+                    ox = (m_Rects[i].xMin - 5f);
                     return false;
                 }
             }

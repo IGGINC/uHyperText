@@ -5,6 +5,7 @@ namespace WXB
 {
     public interface Owner
     {
+        bool isArabic { get; set; }
         // 最小行高
         int minLineHeight { get; set; }
 

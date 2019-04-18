@@ -30,9 +30,8 @@ namespace WXB
 
                 pixelsPerUnit = 1f;
                 alignedX = 0;
-
                 pt = Vector2.zero;
-                node = null;
+                    node = null;
                 fHeight = 0f;
 
                 this.sb = sb;
@@ -51,128 +50,264 @@ namespace WXB
 
             void DrawCurrent(bool isnewLine, Around around)
             {
-                if (sb.Length != 0)
+                if(node.owner.isArabic)
                 {
-                    Rect area_rect = new Rect(pt.x + alignedX, pt.y, x - pt.x + offsetX, node.getHeight());
+                    if (sb.Length != 0)
+                    {
+                        float width = pt.x - x - offsetX;
+                        Rect area_rect = new Rect(x - alignedX, pt.y, width, node.getHeight());
 
-                    cache.cacheText(lines[(int)yline], node, sb.ToString(), area_rect);
+                        cache.cacheText(lines[(int)yline], node, sb.ToString(), area_rect);
 
-                    sb.Remove(0, sb.Length);
+                        sb.Remove(0, sb.Length);
+                    }
+
+                    if (isnewLine)
+                    {
+                        // 再换行
+                        yline++;
+                        x = maxWidth;
+
+                        pt.x = x - offsetX;
+                        pt.y = offsetY;
+                        for (int n = 0; n < yline; ++n)
+                            pt.y += lines[n].y;
+
+                        if (yline >= lines.Count)
+                        {
+                            --yline;
+                            //Debug.LogError("yline >= vLineSize.Count!yline:" + yline + " vLineSize:" + lines.Count);
+                        }
+
+                        float curentWidth = lines[(int)(yline)].x;
+                        alignedX = AlignedFormatting(node.owner, xFormatting, maxWidth, curentWidth);
+                        alignedX = maxWidth - (alignedX + curentWidth);
+
+                        float newx;
+                        if (!around.isContain(pt.x + alignedX, pt.y, 1, node.getHeight(), out newx, true))
+                        {
+                            pt.x = newx - alignedX;
+                            x = pt.x;
+                        }
+                    }
                 }
-
-                if (isnewLine)
+                else
                 {
-                    // 再换行
-                    yline++;
-                    x = 0.0f;
-
-                    pt.x = offsetX;
-                    pt.y = offsetY;
-                    for (int n = 0; n < yline; ++n)
-                        pt.y += lines[n].y;
-
-                    if (yline >= lines.Count)
+                    if (sb.Length != 0)
                     {
-                        --yline;
-                        //Debug.LogError("yline >= vLineSize.Count!yline:" + yline + " vLineSize:" + lines.Count);
+                        Rect area_rect = new Rect(pt.x + alignedX, pt.y, x - pt.x + offsetX, node.getHeight());
+
+                        cache.cacheText(lines[(int)yline], node, sb.ToString(), area_rect);
+
+                        sb.Remove(0, sb.Length);
                     }
 
-                    alignedX = AlignedFormatting(node.owner, xFormatting, maxWidth, lines[(int)(yline)].x);
-
-                    float newx; 
-                    if (!around.isContain(pt.x + alignedX, pt.y, 1, node.getHeight(), out newx))
+                    if (isnewLine)
                     {
-                        pt.x = newx - alignedX;
-                        x = pt.x;
+                        // 再换行
+                        yline++;
+                        x = 0.0f;
+
+                        pt.x = offsetX;
+                        pt.y = offsetY;
+                        for (int n = 0; n < yline; ++n)
+                            pt.y += lines[n].y;
+
+                        if (yline >= lines.Count)
+                        {
+                            --yline;
+                            //Debug.LogError("yline >= vLineSize.Count!yline:" + yline + " vLineSize:" + lines.Count);
+                        }
+
+                        alignedX = AlignedFormatting(node.owner, xFormatting, maxWidth, lines[(int)(yline)].x);
+
+                        float newx;
+                        if (!around.isContain(pt.x + alignedX, pt.y, 1, node.getHeight(), out newx))
+                        {
+                            pt.x = newx - alignedX;
+                            x = pt.x;
+                        }
                     }
+
                 }
             }
 
             public void Draw(TextNode n)
             {
                 node = n;
-                pt = new Vector2(x + offsetX, offsetY);
-                for (int i = 0; i < yline; ++i)
-                    pt.y += lines[i].y;
-
-                if (maxWidth == 0)
-                    return;
-
-                alignedX = AlignedFormatting(n.owner, xFormatting, maxWidth, lines[(int)(yline)].x);
-                fHeight = node.getHeight();
-
-                sb.Remove(0, sb.Length);
-
-                Around around = n.owner.around;
-
-                int textindex = 0;
-                float newx = 0f;
-                for (int k = 0; k < node.d_widthList.Count; ++k)
+                if (n.owner.isArabic)
                 {
-                    Element e = node.d_widthList[k];
-                    float totalwidth = e.totalwidth;
-                    if ((x + totalwidth) > maxWidth)
-                    {
-                        if (x != 0f)
-                        {
-                            DrawCurrent(true, around);
-                        }
+                    pt = new Vector2(x - offsetX, offsetY);
+                    for (int i = 0; i < yline; ++i)
+                        pt.y += lines[i].y;
 
-                        if (e.widths == null)
+                    if (maxWidth == 0)
+                        return;
+
+                    float curentWidth = lines[(int)(yline)].x;
+                    alignedX = AlignedFormatting(n.owner, xFormatting, maxWidth, curentWidth);
+                    alignedX = maxWidth - (alignedX + curentWidth);
+                    fHeight = node.getHeight();
+
+                    sb.Remove(0, sb.Length);
+
+                    Around around = n.owner.around;
+
+                    int textindex = node.d_text.Length-1;
+                    float newx = maxWidth;
+                    for (int k = node.d_widthList.Count-1; k >= 0 ; --k)
+                    {
+                        Element e = node.d_widthList[k];
+                        float totalwidth = e.totalwidth;
+                        if ((x - totalwidth) < 0)
                         {
-                            if ((x + e.totalwidth > maxWidth))
+                            if (x != maxWidth)
                             {
                                 DrawCurrent(true, around);
                             }
-                            else
+
+                            if (e.widths == null)
                             {
-                                x += e.totalwidth;
-                                sb.Append(node.d_text[textindex++]);
-                            }
-                        }
-                        else
-                        {
-                            for (int m = 0; m < e.widths.Count;)
-                            {
-                                if (x != 0 && x + e.widths[m] > maxWidth)
+                                if ((x - e.totalwidth < 0))
                                 {
                                     DrawCurrent(true, around);
                                 }
                                 else
                                 {
-                                    x += e.widths[m];
-                                    sb.Append(node.d_text[textindex++]);
-                                    ++m;
+                                    x -= e.totalwidth;
+                                    sb.Insert(0, node.d_text[textindex--]);
+                                }
+                            }
+                            else
+                            {
+                                for (int m = 0; m < e.widths.Count;)
+                                {
+                                    if (x != maxWidth && x - e.widths[m] < 0)
+                                    {
+                                        DrawCurrent(true, around);
+                                    }
+                                    else
+                                    {
+                                        x -= e.widths[m];
+                                        sb.Insert(0, node.d_text[textindex--]);
+                                        ++m;
+                                    }
                                 }
                             }
                         }
+                        else if (!around.isContain(x, pt.y, totalwidth, fHeight, out newx, true))
+                        {
+                            DrawCurrent(false, around);
+
+                            x = newx;
+                            pt.x = newx;
+                            ++k;
+                        }
+                        else
+                        {
+                            int ec = e.count;
+                            sb.Insert(0, node.d_text.Substring(textindex+1-ec, ec));
+                            textindex -= ec;
+                            x -= totalwidth;
+                        }
                     }
-                    else if (!around.isContain(x, pt.y, totalwidth, fHeight, out newx))
+
+                    if (sb.Length != 0)
                     {
                         DrawCurrent(false, around);
-
-                        x = newx;
-                        pt.x = newx;
-                        --k;
                     }
-                    else
+
+                    if (node.d_bNewLine == true)
                     {
-                        int ec = e.count;
-                        sb.Append(node.d_text.Substring(textindex, ec));
-                        textindex += ec;
-                        x += totalwidth;
+                        yline++;
+                        x = maxWidth;
                     }
                 }
-
-                if (sb.Length != 0)
+                else
                 {
-                    DrawCurrent(false, around);
-                }
+                    pt = new Vector2(x + offsetX, offsetY);
+                    for (int i = 0; i < yline; ++i)
+                        pt.y += lines[i].y;
 
-                if (node.d_bNewLine == true)
-                {
-                    yline++;
-                    x = 0;
+                    if (maxWidth == 0)
+                        return;
+
+                    alignedX = AlignedFormatting(n.owner, xFormatting, maxWidth, lines[(int)(yline)].x);
+                    fHeight = node.getHeight();
+
+                    sb.Remove(0, sb.Length);
+
+                    Around around = n.owner.around;
+
+                    int textindex = 0;
+                    float newx = 0f;
+                    for (int k = 0; k < node.d_widthList.Count; ++k)
+                    {
+                        Element e = node.d_widthList[k];
+                        float totalwidth = e.totalwidth;
+                        if ((x + totalwidth) > maxWidth)
+                        {
+                            if (x != 0f)
+                            {
+                                DrawCurrent(true, around);
+                            }
+
+                            if (e.widths == null)
+                            {
+                                if ((x + e.totalwidth > maxWidth))
+                                {
+                                    DrawCurrent(true, around);
+                                }
+                                else
+                                {
+                                    x += e.totalwidth;
+                                    sb.Append(node.d_text[textindex++]);
+                                }
+                            }
+                            else
+                            {
+                                for (int m = 0; m < e.widths.Count;)
+                                {
+                                    if (x != 0 && x + e.widths[m] > maxWidth)
+                                    {
+                                        DrawCurrent(true, around);
+                                    }
+                                    else
+                                    {
+                                        x += e.widths[m];
+                                        sb.Append(node.d_text[textindex++]);
+                                        ++m;
+                                    }
+                                }
+                            }
+                        }
+                        else if (!around.isContain(x, pt.y, totalwidth, fHeight, out newx))
+                        {
+                            DrawCurrent(false, around);
+
+                            x = newx;
+                            pt.x = newx;
+                            --k;
+                        }
+                        else
+                        {
+                            int ec = e.count;
+                            sb.Append(node.d_text.Substring(textindex, ec));
+                            textindex += ec;
+                            x += totalwidth;
+                        }
+                    }
+
+                    if (sb.Length != 0)
+                    {
+                        DrawCurrent(false, around);
+                    }
+
+                    if (node.d_bNewLine == true)
+                    {
+                        yline++;
+                        x = 0;
+                    }
                 }
             }
         }
