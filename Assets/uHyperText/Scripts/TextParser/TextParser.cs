@@ -225,7 +225,7 @@ namespace WXB
 
             if (currentConfig.font == null)
             {
-                //Debug.LogError("TextParser pFont == null");
+                Debug.LogError("TextParser pFont == null");
                 return;
             }
 
@@ -268,10 +268,17 @@ namespace WXB
                                 }
 
                                 if (d_text.Length != 0)
-                                    save(false);
-
-                                if (TagParam(tag, param))                                {                                    d_curPos = endpos + 1;                                    break;                                }
-                                else                                {                                    d_text.Append(text[d_curPos]);                                }
+                                    save(false);
+
+                                if (TagParam(tag, param))
+                                {
+                                    d_curPos = endpos + 1;
+                                    break;
+                                }
+                                else
+                                {
+                                    d_text.Append(text[d_curPos]);
+                                }
                             }
                             else
                             {
@@ -457,8 +464,6 @@ namespace WXB
             case 'K': return Color.black;
             case 'Y': return Color.yellow;
             case 'W': return Color.white;
-            case 'U': return new Color(214 / 255f, 226 / 255f, 229 / 255f, 1f);
-            case 'H': return new Color(194/ 255f,194/ 255f,194/ 255f,1f);
             }
 
             return Color.white;

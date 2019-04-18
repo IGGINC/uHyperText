@@ -34,7 +34,7 @@ namespace WXB
             return s_StandardResources;
         }
 
-        [MenuItem("GameObject/UI/SymbolText", false)]
+        [MenuItem("GameObject/UI/富文本", false)]
         static public void AddSymbolText(MenuCommand menuCommand)
         {
             GameObject go = DefaultControls.CreateText(GetStandardResources());

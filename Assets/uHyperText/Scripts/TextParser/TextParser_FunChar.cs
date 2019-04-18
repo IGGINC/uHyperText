@@ -22,8 +22,6 @@ namespace WXB
             OnFuns['K'] = ParserSureColor;
             OnFuns['Y'] = ParserSureColor;
             OnFuns['W'] = ParserSureColor;
-            OnFuns['U'] = ParserSureColor;
-            OnFuns['H'] = ParserSureColor;
 
             // 输出一个#
             OnFuns['#'] = ParserOutputChar;

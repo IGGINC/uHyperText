@@ -93,9 +93,9 @@ namespace WXB
         }
 
         protected override void UpdateMaterial()
-        {
-            // modify by Johance 如果不调用此函数，直接设置对齐方式，不会立即触发排版
-            base.UpdateMaterial();
+        {
+            // modify by Johance 如果不调用此函数，直接设置对齐方式，不会立即触发排版
+            base.UpdateMaterial();
 
             if (!IsActive())
                 return;
@@ -215,9 +215,13 @@ namespace WXB
                 }
             }
 
-            mLines.Add(new Line(Vector2.zero));
+            var line = new Line(Vector2.zero);
             Vector2 currentpos = Vector2.zero;
-            if(isArabic)            {                currentpos = new Vector2(w, 0);            }
+            if(isArabic)
+            {
+                currentpos = new Vector2(w, 0);
+            }
+            mLines.Add(line);
             float scale = pixelsPerUnit;
             foreach (NodeBase node in mNodeList)
                 node.fill(ref currentpos, mLines, w, scale);
@@ -242,9 +246,9 @@ namespace WXB
                 return;
 
             float x = 0;
-            if(isArabic)
-            {
-                x = w;
+            if(isArabic)
+            {
+                x = w;
             }
             uint yline = 0;
             LinkedListNode<NodeBase> itor = mNodeList.First;

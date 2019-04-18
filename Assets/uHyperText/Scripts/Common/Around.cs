@@ -36,9 +36,9 @@ namespace WXB
                 ox = 0f;
                 return true;
             }
-            if (bRtl)
-            {
-                x = x - w;
+            if (bRtl)
+            {
+                x = x - w;
             }
             Rect r = new Rect(x, y, w, h);
             for (int i = 0; i < m_Rects.Count; ++i)

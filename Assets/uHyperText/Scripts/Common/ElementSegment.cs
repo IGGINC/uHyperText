@@ -42,9 +42,9 @@ namespace WXB
             }
 
             // 阿拉伯语的也算做英文
-            if((c >= 1536 && c <= 1791) || (c >= 65136 && c <= 65279))
-            {
-                return CharType.Rtl;
+            if((c >= 1536 && c <= 1791) || (c >= 65136 && c <= 65279))
+            {
+                return CharType.Rtl;
             }
 
             if (c > 128)
@@ -113,26 +113,26 @@ namespace WXB
 
                             sb.Append(current);
                         }
-                        break;
-                        case CharType.Rtl:
-                            {
-                                switch (lasttype)
-                                {
-                                    case CharType.Chinese: // 中文接英文，那么先把中文的保存起来
-                                        widths.Add(Create(sb, fontwidth));
-                                        break;
-
-                                    case CharType.Punctuation: // 英文接标点符号的
-                                        widths.Add(Create(sb, fontwidth));
-                                        break;
-
-                                    case CharType.English:
-                                        break;
-                                }
-
-                                sb.Append(current);
-                            }
-                            break;
+                        break;
+                        case CharType.Rtl:
+                            {
+                                switch (lasttype)
+                                {
+                                    case CharType.Chinese: // 中文接英文，那么先把中文的保存起来
+                                        widths.Add(Create(sb, fontwidth));
+                                        break;
+
+                                    case CharType.Punctuation: // 英文接标点符号的
+                                        widths.Add(Create(sb, fontwidth));
+                                        break;
+
+                                    case CharType.English:
+                                        break;
+                                }
+
+                                sb.Append(current);
+                            }
+                            break;
                         case CharType.Chinese:
                         {
                             switch (lasttype)

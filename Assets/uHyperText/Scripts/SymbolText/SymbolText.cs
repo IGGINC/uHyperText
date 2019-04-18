@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using GameFramework;
 
 namespace WXB
 {
@@ -63,17 +62,9 @@ namespace WXB
             FreeDraws();
             SetVerticesDirty();
             SetMaterialDirty();
-        }
-        /// <summary>
-        /// Original text which user sets via editor.
-        /// You sould use this value if you want need original string. (to use in a third-party)
-        /// </summary>
-        public string BaseText
-        {
-            get { return base.text; }
         }
-
-        private bool m_isArabic = false;
+
+        private bool m_isArabic = false;
         public bool isArabic
         {
             get
@@ -81,11 +72,13 @@ namespace WXB
                 return m_isArabic;
             }
             set
-            {                m_isArabic = value;
+            {
+                m_isArabic = value;
                 SetAllDirty();
                 UpdateByDirty();
             }
         }
+
         public override string text
         {
             set
@@ -384,7 +377,6 @@ namespace WXB
         {
             base.OnEnable();
             ActiveList.Add(this);
-            isArabic = Language.IsArabic();
         }
 
         protected override void OnDisable()

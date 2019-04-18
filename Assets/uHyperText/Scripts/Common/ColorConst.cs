@@ -18,8 +18,6 @@ namespace WXB
         public static Color purple = new Color(0x80/255f, 0f, 0x80 / 255f, 1f);
         public static Color silver = new Color(0xc0 / 255f, 0xc0 / 255f, 0xc0 / 255f, 1f);
         public static Color teal = new Color(0f, 0x80 / 255f, 0x80 / 255f, 1f);
-        public static Color uColor = new Color(214 / 255f, 226 / 255f, 229 / 255f, 1f);
-        public static Color hColor = new Color(194 / 255f, 194 / 255f, 194 / 255f, 1f);
 
         static public Dictionary<string, Color> NameToColors = new Dictionary<string, Color>();
 
@@ -66,8 +64,6 @@ namespace WXB
             case "K": color = Color.black; return true;
             case "Y": color = Color.yellow; return true;
             case "W": color = Color.white; return true;
-            case "U": color = uColor; return true;
-            case "H": color = hColor; return true;
             }
 
             color = Color.white;

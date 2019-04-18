@@ -18,7 +18,7 @@ namespace WXB
         [SerializeField]
         Cartoon[] cartoons = null; // 所有的动画
 
-        void Begin()
+        void init()
         {
             if (Fonts == null)
                 Fonts = new Dictionary<string, Font>();
@@ -41,14 +41,12 @@ namespace WXB
                 for (int i = 0; i < sprites.Length; ++i)
                     Sprites.Add(sprites[i].name, sprites[i]);
             }
+
             if (Cartoons == null)
-            {
                 Cartoons = new Dictionary<string, Cartoon>();
-            }
             else
-            {
                 Cartoons.Clear();
-            }
+
             if (cartoons != null)
             {
                 for (int i = 0; i < cartoons.Length; ++i)
@@ -58,23 +56,7 @@ namespace WXB
 
         static void Init()
         {
-            #if UNITY_EDITOR
-            var obj = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/BundleEditing/Ext/Default/Emoji/SymbolTextInit.prefab");
-            #else
-            var asset = GameFramework.AssetBundleManager.LoadResource<GameObject>("emoji","SymbolTextInit");
-            var obj = asset.asset as GameObject;
-            #endif
-            
-            if (obj == null)
-            {
-                Debug.LogError("SymbolText Init Failed");
-                return;
-            }
-            var sti = obj.GetComponent<SymbolTextInit>();
-            if (sti != null)
-            {
-                sti.Begin();
-            }            
+            Resources.Load<SymbolTextInit>("SymbolTextInit").init();
         }
 
         public static Font GetFont(string name)
