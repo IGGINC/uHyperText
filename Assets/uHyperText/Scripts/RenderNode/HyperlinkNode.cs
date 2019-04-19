@@ -8,7 +8,7 @@ namespace WXB
 
         public Color hoveColor = Color.red; // 超链接时的悬浮颜色
 
-        public string d_link; // 链接文本
+        public string link; // 链接文本
 
         public override void onMouseEnter()
         {

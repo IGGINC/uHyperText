@@ -152,7 +152,7 @@ namespace WXB
                 HyperlinkNode node = CreateNode<HyperlinkNode>();
                 node.SetConfig(currentConfig);
                 node.d_text = att.getValueAsString("t");
-                node.d_link = att.getValueAsString("l");
+                node.link = att.getValueAsString("l");
                 node.d_fontSize = att.getValueAsInteger("fs", node.d_fontSize);
                 node.d_fontStyle = (FontStyle)att.getValueAsInteger("ft", (int)node.d_fontStyle);
 

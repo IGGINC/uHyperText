@@ -422,7 +422,7 @@ namespace WXB
                 if (beginPos != -1)
                 {
                     hytext = text.Substring(beginPos, text.Length - beginPos);
-                    node.d_link = hytext.Replace("{", "").Replace("}", "");
+                    node.link = hytext.Replace("{", "").Replace("}", "");
                     text = text.Remove(beginPos, text.Length - beginPos);
                 }
             }
